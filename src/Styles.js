@@ -1,16 +1,23 @@
 import {StyleSheet} from 'react-native';
 
 const stylesCard = StyleSheet.create({
-    view: {
-        width: '100%',
-        height: '100%'
-    },  
+    contenedor: {
+        display: 'flex',
+        flexDirection: 'column',
+        flexWrap: 'wrap',
+        alignContent: 'stretch'
+
+    },
     estiloTarjeta: {
         backgroundColor: 'black',
-        margin: 10,
-        width: '50%',
-        height: '100%',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        width: '75%',
+        margin: 20,
+        borderWidth: 5,
+        borderColor: 'green',
+        
+
+
         
     },
     estiloTexto: {
@@ -20,4 +27,22 @@ const stylesCard = StyleSheet.create({
     }
 })
 
-export {stylesCard}
+const stylesMenu = StyleSheet.create({
+    estiloMenu: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignSelf: 'center'
+
+    },
+    estiloTexto: {
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 10,
+        borderStyle: 'solid',
+        width: 200,
+        padding: 5
+    }
+})
+
+export {stylesCard, stylesMenu}

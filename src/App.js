@@ -1,9 +1,24 @@
+import 'react-native-gesture-handler';
 import React, { Component } from 'react';
-import CardContainer from './Components/CardContainer'
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import ImportUsers from './Screens/ImportUsers'
+import ImportedUsers from './Screens/ImportedUsers'
 import Menu from './Components/Menu'
-import { Text, View, Button, Image, Alert, ScrollView, TextInput, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
+import {
+  Text, 
+  View, 
+  Button, 
+  Image, 
+  Alert,
+  ScrollView, 
+  TextInput, 
+  StyleSheet, 
+  Touchable, 
+  TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const Stack = createStackNavigator();
 
 export default class App extends Component {
   constructor (props){
@@ -24,9 +39,9 @@ export default class App extends Component {
       .catch((e)=>{console.log(e)})
   }
 
-  async storeContactsObject(){
+  async storeContactsObject(cardImportada){
     try{
-      const jsonContacts = JSON.stringify(this.stateusers)
+      const jsonContacts = JSON.stringify(cardImportada)
       await AsyncStorage.setItem('@ContactsInfo', jsonContacts)
     }catch(error){
       console.log(error)
@@ -37,39 +52,41 @@ export default class App extends Component {
     try{
       const jsonContacts = await AsyncStorage.getItem('@ContactsInfo')
       this.setState({importedUsers: JSON.parse(jsonContacts)})
-    }catch{
+    }catch(error){
       console.log(error)
     }
   }
 
+  importCard(key){
+    let cardImportada=this.state.users.filter((card)=>{
+      return card.login.uuid === key;
+    })
+    // this.state.importedUsers.push(cardImportada)
+    this.getContactsObject()
+    this.state.importedUsers.push(cardImportada)
+    this.setState({
+      importedUsers: this.state.importedUsers
+    })
+    console.log(this.state.importedUsers)
+    this.storeContactsObject(this.state.importedUsers)
+    let cardsRestantes=this.state.users.filter((card)=>{
+      return card.login.uuid !== key;
+    })
+    this.setState({users: cardsRestantes })
+   }
+
   render(){
     return (
-      <View>
-        <Menu />
-        <ScrollView>
-          {
-            this.state.users.map((user)=>{
-              return(
-                  <CardContainer
-                    key={ user.login.uuid} 
-                    id= {user.login.uuid}
-                    name={ user.name.first }
-                    lastname= { user.name.last }
-                    picture={ user.picture.large }
-                    email= {user.email}
-                    fnac={ user.dob.date.substr(0,10) }
-                    edad= {user.dob.age}
-                    direccion= {user.location}
-                    register={user.registered.date.substr(0,10)}
-                    telefono= {user.phone}
-                    /* onDelete={this.eliminarTarjeta.bind(this)}  */
-                  
-                  />
-              )
-            })
-          }
-        </ScrollView>
-      </View>
+      <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='Menu' component={Menu} options={{title: 'Menu'}} ></Stack.Screen>
+        <Stack.Screen name='ImportUsers' component={ImportUsers} options={{title: 'Importar usuarios'}} ></Stack.Screen>
+        <Stack.Screen name='ImportedUsers' component={ImportedUsers} options={{title: 'Ver usuarios importados'}} ></Stack.Screen>
+        {/* <Stack.Screen name='EditCards' component={} options={{title: ''}} ></Stack.Screen>
+        <Stack.Screen name='RecycleBin' component={} options={{title: ''}} ></Stack.Screen>
+        <Stack.Screen name='About' component={} options={{title: ''}} ></Stack.Screen> */}
+      </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 
