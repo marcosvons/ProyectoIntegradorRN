@@ -26,6 +26,22 @@ export default class importedUsers extends Component {
       console.log(this.state.importedUsers)
   }
 
+  
+  importCard(key){
+    let cardImportada=this.state.users.filter((card)=>{
+      return card.login.uuid === key;
+    })
+    this.state.importedUsers.push(cardImportada)
+    this.setState({
+      importedUsers: this.state.importedUsers
+    })
+    console.log(this.state.importedUsers)
+    this.storeContactsObject(this.state.importedUsers)
+    let cardsRestantes=this.state.users.filter((card)=>{
+      return card.login.uuid !== key;
+    })
+    this.setState({users: cardsRestantes })
+   }
 
   render(){
     return (
@@ -34,18 +50,18 @@ export default class importedUsers extends Component {
             this.state.importedUsers.map((user)=>{
               return(
                   <CardContainer
-                    key={ user.login.uuid} 
-                    id= {user.login.uuid}
-                    name={ user.name.first }
-                    lastname= { user.name.last }
-                    picture={ user.picture.large }
-                    email= {user.email}
-                    fnac={ user.dob.date.substr(0,10) }
-                    edad= {user.dob.age}
-                    direccion= {user.location}
-                    register={user.registered.date.substr(0,10)}
-                    telefono= {user.phone}
-                   
+                    key={ user[0].login.uuid} 
+                    id= {user[0].login.uuid}
+                    name={ user[0].name.first }
+                    lastname= { user[0].name.last }
+                    picture={ user[0].picture.large }
+                    email= {user[0].email}
+                    fnac={ user[0].dob.date.substr(0,10) }
+                    edad= {user[0].dob.age}
+                    direccion= {user[0].location}
+                    register={user[0].registered.date.substr(0,10)}
+                    telefono= {user[0].phone}
+                    import={this.importCard.bind(this)}
                     /* onDelete={this.eliminarTarjeta.bind(this)}  */
                   
                   />
