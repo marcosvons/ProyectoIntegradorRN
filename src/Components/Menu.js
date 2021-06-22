@@ -13,7 +13,6 @@ export default class Menu extends Component{
     render(){
         return(
             <View style={stylesMenu.estiloMenu}>
-                <TouchableOpacity style={stylesMenu.estiloTexto} >Menu</TouchableOpacity>
                 <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportUsers')}>Importar tarjetas</TouchableOpacity>
                 <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportedUsers')}>Tarjetas importadas</TouchableOpacity>
                 <TouchableOpacity style={stylesMenu.estiloTexto}>Buscar / Editar tarjetas</TouchableOpacity>

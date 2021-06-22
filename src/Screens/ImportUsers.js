@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getCardsInfo } from '../api/RandomUsers';
 import { Text, View, Button, Image, Alert, ScrollView, TextInput, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import CardContainer from '../Components/CardContainer';
 import {stylesCard} from '../Styles'
@@ -15,14 +16,13 @@ export default class ImportUsers extends Component {
   }
 
   componentDidMount(){
-    fetch("https://randomuser.me/api/?results=10")
-      .then(r => r.json())
-      .then((resultado)=>{
-        this.setState({users: resultado.results})
-      })
-      .catch((e)=>{console.log(e)})
+    getCardsInfo(10)
+    .then ( (cardsInfo) => {
+      this.setState({users: cardsInfo})
+    })
   }
 
+ 
   async storeContactsObject(cardImportada){
     try{
       const jsonContacts = JSON.stringify(cardImportada)
