@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Text, View, Button, Image, Alert, ScrollView, TextInput, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import {stylesMenu} from '../Styles'
 
 export default class Menu extends Component{
@@ -13,11 +13,11 @@ export default class Menu extends Component{
     render(){
         return(
             <View style={stylesMenu.estiloMenu}>
-                <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportUsers')}>Importar tarjetas</TouchableOpacity>
-                <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportedUsers')}>Tarjetas importadas</TouchableOpacity>
-                <TouchableOpacity style={stylesMenu.estiloTexto}>Buscar / Editar tarjetas</TouchableOpacity>
-                <TouchableOpacity style={stylesMenu.estiloTexto}>Papelera de Reciclaje</TouchableOpacity>
-                <TouchableOpacity style={stylesMenu.estiloTexto}>Acerca de</TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportUsers')}><Text>Importar tarjetas</Text></TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportedUsers')}><Text>Tarjetas importadas</Text></TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto}><Text>Buscar / Editar tarjetas</Text></TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto}><Text>Papelera de Reciclaje</Text></TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto}><Text>Acerca de</Text></TouchableOpacity>
             </View>
         );
     }

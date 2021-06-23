@@ -11,18 +11,21 @@ const stylesCard = StyleSheet.create({
     estiloTarjeta: {
         backgroundColor: 'black',
         alignSelf: 'center',
-        width: '75%',
-        margin: 20,
+        width: '90%',
+        margin: 10,
         borderWidth: 5,
-        borderColor: 'green',        
+        borderColor: 'grey',   
+        padding: 5     
     },
     estiloTexto: {
         color: 'white',
-        fontSize: 32,
+        fontSize: 25,
         alignSelf: 'center'
     },
     estiloButton: {
-        color: 'white'
+        color: 'white',
+        padding: 5,
+        fontSize: 15
     }
 })
 
@@ -52,8 +55,8 @@ const stylesModal = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.3)'
     },
     estiloModal: {
-        height: 100,
-        width: 200,
+        height: 300,
+        width: 400,
         backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
@@ -68,10 +71,9 @@ const stylesModal = StyleSheet.create({
         fontSize: 20
     },
     closeButtonModal: {
-        position: 'absolute',
-        right: 20,
-        top: 10,
-        fontSize: 15
+        fontSize: 35
+    },
+    positionCloseButton: {
     }
 })
 

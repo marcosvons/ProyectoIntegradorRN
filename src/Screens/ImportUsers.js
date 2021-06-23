@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { getCardsInfo } from '../api/RandomUsers';
-import { Text, View, Button, Image, Alert, ScrollView, TextInput, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
-import CardContainer from '../Components/CardContainer';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import {stylesCard} from '../Styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native-gesture-handler';
+
 
 export default class ImportUsers extends Component {
   constructor (props){
@@ -11,7 +12,7 @@ export default class ImportUsers extends Component {
       this.state={
         users: [],
         importedUsers: [],
-
+        seleccion: []
       }
   }
 
@@ -23,59 +24,66 @@ export default class ImportUsers extends Component {
   }
 
  
-  async storeContactsObject(cardImportada){
+  async storeContactsObject(cardsImportadas){
     try{
-      const jsonContacts = JSON.stringify(cardImportada)
+      const jsonContacts = JSON.stringify(cardsImportadas)
       await AsyncStorage.setItem('@ContactsInfo', jsonContacts)
     }catch(error){
       console.log(error)
     }
   }
 
+  async getContactsObject(){
+    try{
+      const jsonContacts = await AsyncStorage.getItem('@ContactsInfo')
+      this.setState({importedUsers: JSON.parse(jsonContacts)})
+    }catch (error){
+      console.log(error)
+    }
+  }
 
-  importCard(key){
-    let cardImportada=this.state.users.filter((card)=>{
+importCard(key){
+    this.getContactsObject()
+    .then (() => {
+    var cardImportada=this.state.users.filter((card)=>{
       return card.login.uuid === key;
     })
-    this.state.importedUsers.push(cardImportada)
-    this.setState({
-      importedUsers: this.state.importedUsers
-    })
-    console.log(this.state.importedUsers)
-    this.storeContactsObject(this.state.importedUsers)
+    var nuevoArrayUsuariosImportados = [...this.state.importedUsers, ... cardImportada]
+    this.storeContactsObject(nuevoArrayUsuariosImportados)
     let cardsRestantes=this.state.users.filter((card)=>{
       return card.login.uuid !== key;
     })
     this.setState({users: cardsRestantes })
-   }
+  })
+  }
 
+   renderItem = ({item}) => {
+      return (
+        <TouchableOpacity onPress={()=> this.importCard(item.login.uuid)}>
+        <View style={stylesCard.estiloTarjeta}>
+            <Image source={{uri: item.picture.large}} style={{width: 300, height: 300, alignSelf: 'center'}} />
+            <Text style={stylesCard.estiloTexto}>{item.name.last}</Text>   
+            <Text style={stylesCard.estiloTexto}>{item.name.first}</Text> 
+            <Text style={stylesCard.estiloTexto}>{item.email}</Text>
+            <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10) } - ({item.dob.age})</Text>
+        </View>
+      </TouchableOpacity>
+      )
+    }
+
+    keyExtractor = (item) => item.login.uuid.toString()
 
   render(){
     return (
-      <ScrollView style={stylesCard.contenedor} >
-      {
-        this.state.users.map((user)=>{
-          return(
-              <CardContainer
-                key={ user.login.uuid} 
-                id= {user.login.uuid}
-                name={ user.name.first }
-                lastname= { user.name.last }
-                picture={ user.picture.large }
-                email= {user.email}
-                fnac={ user.dob.date.substr(0,10) }
-                edad= {user.dob.age}
-                direccion= {user.location}
-                register={user.registered.date.substr(0,10)}
-                telefono= {user.phone}
-                import={this.importCard.bind(this)}
-                /* onDelete={this.eliminarTarjeta.bind(this)}  */
-              
-              />
-          )
-        })
-      }
-    </ScrollView>
+
+      <View>
+          <FlatList 
+            data={this.state.users}
+            keyExtractor= {this.keyExtractor}
+            renderItem = {this.renderItem}
+          />
+        </View>  
+
     );
   }
 
