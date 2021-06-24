@@ -15,8 +15,8 @@ export default class Menu extends Component{
             <View style={stylesMenu.estiloMenu}>
                 <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportUsers')}><Text>Importar tarjetas</Text></TouchableOpacity>
                 <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('ImportedUsers')}><Text>Tarjetas importadas</Text></TouchableOpacity>
-                <TouchableOpacity style={stylesMenu.estiloTexto}><Text>Buscar / Editar tarjetas</Text></TouchableOpacity>
-                <TouchableOpacity style={stylesMenu.estiloTexto}><Text>Papelera de Reciclaje</Text></TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('EditCards')} ><Text>Buscar / Editar tarjetas</Text></TouchableOpacity>
+                <TouchableOpacity style={stylesMenu.estiloTexto} onPress={() => this.props.navigation.navigate('RecycleBin')} ><Text>Papelera de Reciclaje</Text></TouchableOpacity>
                 <TouchableOpacity style={stylesMenu.estiloTexto}><Text>Acerca de</Text></TouchableOpacity>
             </View>
         );

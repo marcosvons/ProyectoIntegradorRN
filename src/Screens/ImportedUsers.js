@@ -12,6 +12,7 @@ export default class ImportedUsers extends Component {
           importedUser:[],
           showModal: false,
           selectedItem: null,
+          cardsPapelera: []
       }
   }
 
@@ -26,6 +27,18 @@ export default class ImportedUsers extends Component {
  
   componentDidMount(){
       this.getContactsObject()
+      .then(()=>{
+        console.log(this.state.importedUser)
+      })
+  }
+
+  async getRecycleBin(){
+    try{
+      const jsonContacts = await AsyncStorage.getItem('RecycleBin')
+      this.setState({cardsPapelera: JSON.parse(jsonContacts)})
+    }catch (error){
+      console.log(error)
+    }
   }
 
   
@@ -34,8 +47,25 @@ export default class ImportedUsers extends Component {
       return card.login.uuid !== key;
     })
     this.storeContactsObject(cardsRestantes)
+    this.getRecycleBin()
+    .then(()=>{
+    let cardPapelera=this.state.importedUser.filter((card)=>{
+      return card.login.uuid === key;
+    })
+    var nuevoArrayUsuariosEliminados = [...this.state.cardsPapelera, ... cardPapelera]
+    this.storeRecycleBin(nuevoArrayUsuariosEliminados)
+    })
     this.getContactsObject()
    }
+
+   async storeRecycleBin(cardPapelera){
+    try{
+      const jsonContacts = JSON.stringify(cardPapelera)
+      await AsyncStorage.setItem('RecycleBin', jsonContacts)
+    }catch(error){
+      console.log(error)
+    }
+  }
 
    async storeContactsObject(cardImportada){
     try{
