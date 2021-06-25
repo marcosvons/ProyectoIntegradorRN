@@ -9,13 +9,14 @@ const stylesCard = StyleSheet.create({
 
     },
     estiloTarjeta: {
-        backgroundColor: 'black',
+        backgroundColor: 'darkgrey',
         alignSelf: 'center',
         width: '90%',
         margin: 10,
         borderWidth: 5,
-        borderColor: 'grey',   
-        padding: 5     
+        borderColor: 'grey',
+        borderRadius: 10,   
+        padding: 10     
     },
     estiloTexto: {
         color: 'white',
@@ -26,7 +27,35 @@ const stylesCard = StyleSheet.create({
         color: 'white',
         padding: 5,
         fontSize: 15
+    },
+    estiloTouchable: {
+        borderStyle:'solid', 
+        borderWidth:2, 
+        borderColor:'white', 
+        borderRadius: 10
+    },
+    estiloImagen: {
+        width: 300, 
+        height: 300, 
+        alignSelf: 'center',
+        borderRadius:10, 
+        marginBottom:5,
+        marginTop: 5
+    },
+    viewButtons: {
+        display:'flex',
+        flexDirection: 'row', 
+        justifyContent:'flex-start', 
+        marginTop: 15,
+        flexWrap: 'wrap'
+    },
+    estiloTextInput: {
+        backgroundColor:'white', marginTop: 15, height:25, borderStyle: 'solid', borderRadius: 10, borderColor: 'grey', borderWidth:2, width: 300, alignSelf: 'center'
+    },
+    viewButtons2: {
+        display: 'flex', flexDirection: 'row', justifyContent:'space-between', marginTop: 15, flexWrap:'wrap'
     }
+    
 })
 
 const stylesMenu = StyleSheet.create({
@@ -61,7 +90,7 @@ const stylesModal = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 20,
-        elevation: 20,
+        elevation: 60,
         shadowColor: 'black',
         borderWidth: 1,
         borderStyle: 'solid',

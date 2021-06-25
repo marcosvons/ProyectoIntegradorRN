@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Modal } from 'react-native';
-import {stylesModal} from '../Styles'
+import {stylesModal, stylesCard} from '../Styles'
 
 export default class DetalleModal extends Component {
     
@@ -11,7 +11,7 @@ export default class DetalleModal extends Component {
             animationType='fade'>
             <View style={stylesModal.modalContainer}>
                 <View style={stylesModal.estiloModal}>
-                    <TouchableOpacity style={stylesModal.positionCloseButton}
+                    <TouchableOpacity style={stylesCard.estiloTouchable}
                         onPress={this.props.onClose.bind(this) }>
                             <Text style={stylesModal.closeButtonModal}>X</Text>
                     </TouchableOpacity>

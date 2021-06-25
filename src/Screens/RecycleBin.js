@@ -12,7 +12,7 @@ export default class RecycleBin extends Component {
             cardsPapelera:[],
             showModal: false,
             selectedItem: null,
-            cardPressed: -1,
+            importedUsers: []
         }
     }
 
@@ -60,29 +60,52 @@ export default class RecycleBin extends Component {
         this.setState({selectedItem: item, showModal: true})
       }
 
-      cardSeleccionada(value){
-        this.setState({cardPressed: value})
+      async getContactsObject(){
+        try{
+          const jsonContacts = await AsyncStorage.getItem('@ContactsInfo')
+          this.setState({importedUsers: JSON.parse(jsonContacts)})
+        }catch (error){
+          console.log(error)
+        }
       }
-    
+
+      async storeContactsObject(cardsImportadas){
+        try{
+          const jsonContacts = JSON.stringify(cardsImportadas)
+          await AsyncStorage.setItem('@ContactsInfo', jsonContacts)
+        }catch(error){
+          console.log(error)
+        }
+      }
+
+      async restaurarTarjetas(){
+        await this.getContactsObject()
+        var nuevoArrayUsuariosRestaurados = [...this.state.importedUsers, ... this.state.cardsPapelera]
+        this.storeContactsObject(nuevoArrayUsuariosRestaurados)
+        this.setState({cardsPapelera: []})
+        this.storeRecycleBin(this.state.cardsPapelera)
+      }
+
     
        renderItem = ({item}) => {
          return (
           <View style={stylesCard.estiloTarjeta}>
-            <TouchableOpacity  onPress={() => this.deleteCardCompletely(item.login.uuid)}>
-              <Text style={{color: 'white'}}>X</Text>
-            </TouchableOpacity>
-            <Image source={{uri: item.picture.large}} style={{width: 300, height: 300, alignSelf: 'center'}} />
-            <Text style={stylesCard.estiloTexto}>{item.name.last}</Text>   
-            <Text style={stylesCard.estiloTexto}>{item.name.first}</Text> 
+            <View style={{display:'flex', flexDirection: 'row', justifyContent:'flex-end', marginBottom: 5}}>
+              <TouchableOpacity  onPress={() => this.deleteCardCompletely(item.login.uuid)}
+                style={stylesCard.estiloTouchable}>
+                <Text style={{color: 'white', fontSize: 20, padding: 5}}>X</Text>
+              </TouchableOpacity>
+            </View>
+            <Image source={{uri: item.picture.large}} style={stylesCard.estiloImagen} />
+            <Text style={stylesCard.estiloTexto}>{item.name.first} {item.name.last}</Text>   
             <Text style={stylesCard.estiloTexto}>{item.email}</Text>
             <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10)} - ({item.dob.age})</Text>
-            <TouchableOpacity onPress={() => this.showModal(item)}>
-              <Text style={stylesCard.estiloButton}>Ver detalle</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.cardSeleccionada(item.login.uuid)}
-              style={{backgroundColor: this.state.cardPressed === item.login.uuid ? 'white' : 'grey' }}>
-              <Text>Seleccionar</Text>
-            </TouchableOpacity>
+            <View style={stylesCard.viewButtons}>
+              <TouchableOpacity onPress={() => this.showModal(item)}
+                style={stylesCard.estiloTouchable}>
+                <Text style={stylesCard.estiloButton}>Ver detalle</Text>
+              </TouchableOpacity>
+            </View>
             
             <DetalleModal showModal={this.state.showModal} 
               onClose={this.onClose.bind(this)}
@@ -98,6 +121,12 @@ export default class RecycleBin extends Component {
         return (
     
             <View>
+              <View>
+                <TouchableOpacity onPress={()=>this.restaurarTarjetas()}
+                  style={stylesCard.estiloTouchable}>
+                  <Text style={{color: 'grey',fontSize: 25,alignSelf: 'center'}}>Restaurar todas las tarjetas</Text>
+                </TouchableOpacity>
+              </View>
               <FlatList 
                 data={this.state.cardsPapelera}
                 keyExtractor= {this.keyExtractor}

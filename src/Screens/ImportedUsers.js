@@ -86,17 +86,21 @@ export default class ImportedUsers extends Component {
    renderItem = ({item}) => {
      return (
       <View style={stylesCard.estiloTarjeta}>
-        <TouchableOpacity  onPress={() => this.deleteImportedCard(item.login.uuid)}>
-          <Text style={{color: 'white'}}>X</Text>
-        </TouchableOpacity>
-        <Image source={{uri: item.picture.large}} style={{width: 300, height: 300, alignSelf: 'center'}} />
-        <Text style={stylesCard.estiloTexto}>{item.name.last}</Text>   
-        <Text style={stylesCard.estiloTexto}>{item.name.first}</Text> 
+        <View style={{display:'flex', flexDirection: 'row', justifyContent:'flex-end', marginBottom: 5}}>
+          <TouchableOpacity  onPress={() => this.deleteImportedCard(item.login.uuid)} style={stylesCard.estiloTouchable}>
+            <Text style={{color: 'white', fontSize: 20, padding: 5}}>X</Text>
+          </TouchableOpacity>
+        </View>
+        <Image source={{uri: item.picture.large}} style={stylesCard.estiloImagen} />
+        <Text style={stylesCard.estiloTexto}>{item.name.first} {item.name.last}</Text> 
         <Text style={stylesCard.estiloTexto}>{item.email}</Text>
         <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10)} - ({item.dob.age})</Text>
-        <TouchableOpacity onPress={() => this.showModal(item)}>
+        <View style={{display:'flex', flexDirection: 'row', justifyContent:'flex-start', marginTop: 15}}>
+        <TouchableOpacity onPress={() => this.showModal(item)}
+          style={stylesCard.estiloTouchable}>
           <Text style={stylesCard.estiloButton}>Ver detalle</Text>
         </TouchableOpacity>
+        </View>
         
         <DetalleModal showModal={this.state.showModal} 
           onClose={this.onClose.bind(this)}

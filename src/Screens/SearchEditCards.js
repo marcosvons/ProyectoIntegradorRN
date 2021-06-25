@@ -144,20 +144,27 @@ export default class SearchEditCards extends Component {
    renderItem = ({item}) => {
      return (
       <View style={stylesCard.estiloTarjeta}>
-        <Image source={{uri: item.picture.large}} style={{width: 300, height: 300, alignSelf: 'center'}} />
-        <Text style={stylesCard.estiloTexto}>{item.name.last}</Text>   
-        <Text style={stylesCard.estiloTexto}>{item.name.first}</Text> 
+        <Image source={{uri: item.picture.large}} style={stylesCard.estiloImagen} />
+        <Text style={stylesCard.estiloTexto}>{item.name.first} {item.name.last}</Text>   
         <Text style={stylesCard.estiloTexto}>{item.email}</Text>
         <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10)} - ({item.dob.age})</Text>
-        <Text>Comentario: </Text>
-        <TextInput onChangeText={(text)=>this.setState({comentario: text})}
-          style={{backgroundColor:'white'}}></TextInput>
-        <TouchableOpacity onPress={() => this.addComment(item)}>
+        <View style={stylesCard.estiloViewButtons}>
+        <View style={stylesCard.viewButtons}>
+        <Text style={stylesCard.estiloTexto}>Comentario: </Text>
+          <TextInput onChangeText={(text)=>this.setState({comentario: text})}
+            style={stylesCard.estiloTextInput}></TextInput>
+        </View>
+        <View style={stylesCard.viewButtons2}>
+        <TouchableOpacity onPress={() => this.addComment(item)}
+          style={stylesCard.estiloTouchable}>
           <Text style={stylesCard.estiloButton}>Agregar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.showModal(item)}>
+        <TouchableOpacity onPress={() => this.showModal(item)}
+          style={stylesCard.estiloTouchable}>
           <Text style={stylesCard.estiloButton}>Ver detalle</Text>
         </TouchableOpacity>
+        </View>
+      </View>
         
          <DetalleModal showModal={this.state.showModal} 
           onClose={this.onClose.bind(this)}
@@ -175,27 +182,35 @@ export default class SearchEditCards extends Component {
         
         
         <View>
-            <TouchableOpacity onPress={ () => this.nameFilter()} style={{backgroundColor: this.state.colorNameFilter}}>
-              <Text>Filtrar por nombre</Text>
+          <View>
+            <TouchableOpacity onPress={ () => this.nameFilter()} style={{backgroundColor: this.state.colorNameFilter, borderRadius:10}}>
+              <Text style={{padding: 5, alignSelf:'center'}}>Filtrar por nombre</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={ () => this.lastnameFilter()} style={{backgroundColor:this.state.colorLastnameFilter}}>
-              <Text>Filtrar por apellido</Text>
+            <TouchableOpacity onPress={ () => this.lastnameFilter()} style={{backgroundColor:this.state.colorLastnameFilter, borderRadius:10 }}>
+              <Text style={{padding: 5, alignSelf:'center'}}>Filtrar por apellido</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={ () => this.paisFilter()} style={{backgroundColor:this.state.colorPaisFilter}}>
-              <Text>Filtrar por País y Ciudad</Text>
+            <TouchableOpacity onPress={ () => this.paisFilter()} style={{backgroundColor:this.state.colorPaisFilter, borderRadius:10 }}>
+              <Text style={{padding: 5, alignSelf:'center'}}>Filtrar por País y Ciudad</Text>
             </TouchableOpacity>
-            <TextInput onChangeText={ (text) => this.setState({filter: text})} ></TextInput>
-            <TouchableOpacity onPress={() => this.filter()}>
-              <Text>Filtrar</Text>
+            <TextInput onChangeText={ (text) => this.setState({filter: text})}
+              style={stylesCard.estiloTextInput} ></TextInput>
+            <View style={{display:'flex',flexDirection: 'row', justifyContent:'space-between', marginTop: 5}}>
+            <TouchableOpacity onPress={() => this.filter()}
+              style={stylesCard.estiloTouchable}>
+              <Text style={{paddingHorizontal: 10, alignSelf:'center'}}>Filtrar</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.getContactsObject()}>
-              <Text>Reestablecer</Text>
+            <TouchableOpacity onPress={() => this.getContactsObject()}
+              style={stylesCard.estiloTouchable}>
+              <Text style={{padding: 5, alignSelf:'center'}}>Reestablecer</Text>
             </TouchableOpacity>
+            </View>
+            </View>
             <FlatList 
                 data={this.state.importedUser}
                 keyExtractor= {this.keyExtractor}
                 renderItem = {this.renderItem}
             />
+          
         </View>  
 
       )
