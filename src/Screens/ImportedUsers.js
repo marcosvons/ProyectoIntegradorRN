@@ -42,20 +42,18 @@ export default class ImportedUsers extends Component {
   }
 
   
-  deleteImportedCard(key){
+  async deleteImportedCard(key){
     let cardsRestantes=this.state.importedUser.filter((card)=>{
       return card.login.uuid !== key;
     })
-    this.storeContactsObject(cardsRestantes)
-    this.getRecycleBin()
-    .then(()=>{
+    await this.storeContactsObject(cardsRestantes)
+    await this.getRecycleBin()
     let cardPapelera=this.state.importedUser.filter((card)=>{
       return card.login.uuid === key;
     })
     var nuevoArrayUsuariosEliminados = [...this.state.cardsPapelera, ... cardPapelera]
     this.storeRecycleBin(nuevoArrayUsuariosEliminados)
-    })
-    this.getContactsObject()
+    this.getContactsObject() 
    }
 
    async storeRecycleBin(cardPapelera){

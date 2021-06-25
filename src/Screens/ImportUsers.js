@@ -42,20 +42,19 @@ export default class ImportUsers extends Component {
     }
   }
 
-importCard(key){
-    this.getContactsObject()
-    .then (() => {
+async importCard(key){
+  var nuevoArrayUsuariosImportados=[]
+    await this.getContactsObject() 
     var cardImportada=this.state.users.filter((card)=>{
       return card.login.uuid === key;
     })
     var nuevoArrayUsuariosImportados = [...this.state.importedUsers, ... cardImportada]
-    this.storeContactsObject(nuevoArrayUsuariosImportados)
+    await this.storeContactsObject(nuevoArrayUsuariosImportados)
     let cardsRestantes=this.state.users.filter((card)=>{
       return card.login.uuid !== key;
     })
-    this.setState({users: cardsRestantes })
-  })
-  }
+    this.setState({users: cardsRestantes }) 
+}
 
    renderItem = ({item}) => {
       return (

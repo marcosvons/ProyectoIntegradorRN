@@ -23,7 +23,7 @@ export default class DetalleModal extends Component {
                     <Text style={stylesModal.estiloTexto}>Postcode: {this.props.value.location.postcode}</Text>
                     <Text style={stylesModal.estiloTexto}>Registered: {this.props.value.registered.date.substr(0,10)}</Text>
                     <Text style={stylesModal.estiloTexto}>Phone: {this.props.value.phone}</Text>
-                    <Text style={stylesModal.estiloTexto}>Informacion adicional: </Text>
+                    <Text style={stylesModal.estiloTexto}>Informacion adicional: {this.props.value.comentario}</Text>
                     </>
                     }
                 </View>

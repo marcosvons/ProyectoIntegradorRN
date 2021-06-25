@@ -31,6 +31,15 @@ export default class SearchEditCards extends Component {
       console.log(error)
     }
   }
+
+  async storeContactsObject(cardImportada){
+    try{
+      const jsonContacts = JSON.stringify(cardImportada)
+      await AsyncStorage.setItem('@ContactsInfo', jsonContacts)
+    }catch(error){
+      console.log(error)
+    }
+  }
  
   componentDidMount(){
       this.getContactsObject()
@@ -88,13 +97,18 @@ export default class SearchEditCards extends Component {
 
   addComment(key){
     var tarjetaModificada = this.state.importedUser.filter((card)=>{
-      return key = card.login.uuid
+      return key.login.uuid === card.login.uuid
     })
-    for (let i=0; i < this.state.importedUser.length; i++){
-      // if (key===this.state.importedUser[i].login.uuid){
-      //   this.setState(importedUser[i].comentario: this.state.comentario)
-      // }
+    tarjetaModificada[0].comentario=this.state.comentario
+    var copiaTarjetas = this.state.importedUser
+    for (let i=0; i < copiaTarjetas.length; i++){
+      if (copiaTarjetas[i].login.uuid === key.login.uuid){
+        copiaTarjetas.splice(i, 1, tarjetaModificada[0])
+      }
     }
+    this.setState({importedUser: copiaTarjetas})
+    this.storeContactsObject(this.state.importedUser)
+ 
   }
 
   filter(){
@@ -136,8 +150,9 @@ export default class SearchEditCards extends Component {
         <Text style={stylesCard.estiloTexto}>{item.email}</Text>
         <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10)} - ({item.dob.age})</Text>
         <Text>Comentario: </Text>
-        <TextInput onChangeText={(text)=>this.setState({comentario: text})}></TextInput>
-        <TouchableOpacity onPress={() => this.addComment(item.login.uuid)}>
+        <TextInput onChangeText={(text)=>this.setState({comentario: text})}
+          style={{backgroundColor:'white'}}></TextInput>
+        <TouchableOpacity onPress={() => this.addComment(item)}>
           <Text style={stylesCard.estiloButton}>Agregar</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.showModal(item)}>
