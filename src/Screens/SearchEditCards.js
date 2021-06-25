@@ -3,7 +3,7 @@ import { Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import {stylesCard} from '../Styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
-import EditModal from '../Components/EditModal';
+import DetalleModal from '../Components/DetalleModal';
 
 export default class SearchEditCards extends Component {
   constructor (props){
@@ -12,10 +12,14 @@ export default class SearchEditCards extends Component {
           importedUser:[],
           showModal: false,
           selectedItem: null,
-          nameFilter: "",
-          lastnameFilter: "",
-          paisFilter: "",
-          resultadosBusqueda:[]
+          filter: '',
+          nameFilter: false,
+          lastnameFilter: false,
+          paisFilter: false,
+          colorNameFilter: 'white',
+          colorLastnameFilter: 'white',
+          colorPaisFilter: 'white',
+          comentario: ""
       } 
   }
 
@@ -50,45 +54,76 @@ export default class SearchEditCards extends Component {
     this.setState({selectedItem: item, showModal: true})
   }
 
+  nameFilter(){
+    this.setState({nameFilter: !this.state.nameFilter}, function(){
+      if (this.state.nameFilter === true){
+        this.setState({colorNameFilter: 'grey'})
+      } else {
+        this.setState({colorNameFilter: 'white'})
+      }
+    })
+    
+  }
+
+  lastnameFilter(){
+    this.setState({lastnameFilter: !this.state.lastnameFilter}, function(){
+      if (this.state.lastnameFilter === true){
+        this.setState({colorLastnameFilter: 'grey'})
+      }else {
+        this.setState({colorLastnameFilter: 'white'})
+      }    
+    })
+  
+  }
+
+  paisFilter(){
+    this.setState({paisFilter: !this.state.paisFilter},
+      function (){if (this.state.paisFilter === true){
+        this.setState({colorPaisFilter: 'grey'})
+      }else {
+        this.setState({colorPaisFilter: 'white'})
+      }} )
+    
+  }
+
+  addComment(key){
+    var tarjetaModificada = this.state.importedUser.filter((card)=>{
+      return key = card.login.uuid
+    })
+    for (let i=0; i < this.state.importedUser.length; i++){
+      // if (key===this.state.importedUser[i].login.uuid){
+      //   this.setState(importedUser[i].comentario: this.state.comentario)
+      // }
+    }
+  }
 
   filter(){
-      if (this.state.nameFilter !== ""){
-        var nombreFiltrado = this.state.nameFilter
+    var search = this.state.filter
+    var resultadoBusqueda=[]
+      if (this.state.nameFilter === true){
             const resultado1 = this.state.importedUser.filter((card)=>{
-                return card.name.first.toLowerCase() ===nombreFiltrado.toLowerCase()
+                return card.name.first.toLowerCase().includes(search.toLowerCase())
             })
-            console.log(resultado1)
-        if (resultado1.length > 0){
-            console.log('existo')
-            this.setState({resultadosBusqueda: resultado1})
-        }
+            var resultadoBusqueda = [...resultadoBusqueda, ... resultado1]
       }
 
-      console.log(this.state.resultadosBusqueda)
-
-      if (this.state.lastnameFilter !== ""){
-        var apellidoFiltrado = this.state.lastnameFilter
+      if (this.state.lastnameFilter === true){
           const resultado2 = this.state.importedUser.filter((card)=>{
-              return card.name.last.toLowerCase() === apellidoFiltrado.toLowerCase()
+              return card.name.last.toLowerCase().includes(search.toLowerCase())
           })
-          if (resultado2.length != 0){
-            var resultadoBusqueda= [...this.state.resultadosBusqueda, ... resultado2]
-            this.setState({resultadosBusqueda: resultadoBusqueda})
-        }
+         
+            var resultadoBusqueda= [...resultadoBusqueda, ... resultado2]
+        
       }
 
-      if (this.state.paisFilter !== ""){
-        var paisFiltrado = this.state.paisFilter
+      if (this.state.paisFilter === true){
           const resultado3 = this.state.importedUser.filter((card)=>{
-              return card.location.city.toLowerCase() === paisFiltrado.toLowerCase() || card.location.country.toLowerCase() === paisFiltrado.toLowerCase()
+              return card.location.city.toLowerCase().includes(search.toLowerCase()) || card.location.country.toLowerCase().includes(search.toLowerCase()) 
           })
-          if (resultado3.length != 0){
-            var resultadoBusqueda= [...this.state.resultadosBusqueda, ... resultado3]
-            this.setState({resultadosBusqueda: resultadoBusqueda})
-        }
+            var resultadoBusqueda= [...resultadoBusqueda, ... resultado3]
       }
 
-      this.setState({importedUser: this.state.resultadosBusqueda})
+      this.setState({importedUser: resultadoBusqueda})
 
   }
 
@@ -100,14 +135,18 @@ export default class SearchEditCards extends Component {
         <Text style={stylesCard.estiloTexto}>{item.name.first}</Text> 
         <Text style={stylesCard.estiloTexto}>{item.email}</Text>
         <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10)} - ({item.dob.age})</Text>
+        <Text>Comentario: </Text>
+        <TextInput onChangeText={(text)=>this.setState({comentario: text})}></TextInput>
+        <TouchableOpacity onPress={() => this.addComment(item.login.uuid)}>
+          <Text style={stylesCard.estiloButton}>Agregar</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => this.showModal(item)}>
-          <Text style={stylesCard.estiloButton}>Agregar comentario</Text>
+          <Text style={stylesCard.estiloButton}>Ver detalle</Text>
         </TouchableOpacity>
         
-        {/* <EditModal showModal={this.state.showModal} 
+         <DetalleModal showModal={this.state.showModal} 
           onClose={this.onClose.bind(this)}
-          value={this.state.selectedItem}
-          editCard={this.editCard.bind(this)} /> */}
+          value={this.state.selectedItem} /> 
 
       </View>
      )
@@ -121,13 +160,22 @@ export default class SearchEditCards extends Component {
         
         
         <View>
-            <Text>Filtrar por nombre</Text>
-            <TextInput onChangeText={(text)=>this.setState({nameFilter: text})} ></TextInput>
-            <Text>Filtrar por apellido</Text>
-            <TextInput onChangeText={(text)=>this.setState({lastnameFilter: text})}></TextInput>
-            <Text>Filtrar por País y Ciudad</Text>
-            <TextInput onChangeText={(text)=>this.setState({paisFilter: text})}></TextInput>
-            <TouchableOpacity onPress={() => this.filter()}><Text>Filtrar</Text></TouchableOpacity>
+            <TouchableOpacity onPress={ () => this.nameFilter()} style={{backgroundColor: this.state.colorNameFilter}}>
+              <Text>Filtrar por nombre</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => this.lastnameFilter()} style={{backgroundColor:this.state.colorLastnameFilter}}>
+              <Text>Filtrar por apellido</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => this.paisFilter()} style={{backgroundColor:this.state.colorPaisFilter}}>
+              <Text>Filtrar por País y Ciudad</Text>
+            </TouchableOpacity>
+            <TextInput onChangeText={ (text) => this.setState({filter: text})} ></TextInput>
+            <TouchableOpacity onPress={() => this.filter()}>
+              <Text>Filtrar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.getContactsObject()}>
+              <Text>Reestablecer</Text>
+            </TouchableOpacity>
             <FlatList 
                 data={this.state.importedUser}
                 keyExtractor= {this.keyExtractor}

@@ -12,6 +12,7 @@ export default class RecycleBin extends Component {
             cardsPapelera:[],
             showModal: false,
             selectedItem: null,
+            cardPressed: -1,
         }
     }
 
@@ -58,6 +59,10 @@ export default class RecycleBin extends Component {
       showModal(item){
         this.setState({selectedItem: item, showModal: true})
       }
+
+      cardSeleccionada(value){
+        this.setState({cardPressed: value})
+      }
     
     
        renderItem = ({item}) => {
@@ -73,6 +78,10 @@ export default class RecycleBin extends Component {
             <Text style={stylesCard.estiloTexto}>{item.dob.date.substr(0,10)} - ({item.dob.age})</Text>
             <TouchableOpacity onPress={() => this.showModal(item)}>
               <Text style={stylesCard.estiloButton}>Ver detalle</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.cardSeleccionada(item.login.uuid)}
+              style={{backgroundColor: this.state.cardPressed === item.login.uuid ? 'white' : 'grey' }}>
+              <Text>Seleccionar</Text>
             </TouchableOpacity>
             
             <DetalleModal showModal={this.state.showModal} 
