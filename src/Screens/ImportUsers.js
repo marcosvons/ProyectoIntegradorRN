@@ -21,13 +21,19 @@ export default class ImportUsers extends Component {
   }
 
   componentDidMount(){
-    console.log(this.props.numberContacts)
-    getCardsInfo(10)
-    .then ( (cardsInfo) => {
+    // console.log(this.props.numberContacts)
+    // .then ( (cardsInfo) => {
+    //   this.setState({users: cardsInfo})
+    // })
+  }
+
+  fetchApi(number){
+    console.log(number)
+    getCardsInfo(number)
+    .then((cardsInfo)=>{
       this.setState({users: cardsInfo})
     })
   }
-
  
   async storeContactsObject(cardsImportadas){
     try{
@@ -108,10 +114,10 @@ onClose(){
           <Text style={{fontSize: 25, alignSelf: 'center'}}>Cantidad tarjetas </Text>
           <TextInput style={stylesCard.estiloTextInput}
             keyboardType='numeric'
-            onChangeText={(number)=>this.setState({numberContacts: number})}></TextInput>
+            onChangeText={(number)=>{this.setState({numberContacts: number})}}></TextInput>
           <View style={{alignContent:'center'}}>
             <TouchableOpacity style={{borderStyle:'solid', borderWidth:2, borderColor:'black', borderRadius: 10, margin:5}}
-              onPress={()=> this.componentDidMount(this.props.numberContacts)}>
+              onPress={()=> this.fetchApi(this.state.numberContacts)}>
               <Text style={{padding: 5, fontSize: 15, alignSelf:'center'}}>Fetch</Text>
             </TouchableOpacity>
           </View>
