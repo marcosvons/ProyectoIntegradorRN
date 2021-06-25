@@ -35,7 +35,9 @@ export default class ImportedUsers extends Component {
   async getRecycleBin(){
     try{
       const jsonContacts = await AsyncStorage.getItem('RecycleBin')
+      if (jsonContacts !== null){
       this.setState({cardsPapelera: JSON.parse(jsonContacts)})
+      }
     }catch (error){
       console.log(error)
     }

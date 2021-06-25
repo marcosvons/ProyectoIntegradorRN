@@ -21,10 +21,7 @@ export default class ImportUsers extends Component {
   }
 
   componentDidMount(){
-    // console.log(this.props.numberContacts)
-    // .then ( (cardsInfo) => {
-    //   this.setState({users: cardsInfo})
-    // })
+    this.getContactsObject();
   }
 
   fetchApi(number){
@@ -47,7 +44,9 @@ export default class ImportUsers extends Component {
   async getContactsObject(){
     try{
       const jsonContacts = await AsyncStorage.getItem('@ContactsInfo')
-      this.setState({importedUsers: JSON.parse(jsonContacts)})
+      if (jsonContacts !== null){
+        this.setState({importedUsers: JSON.parse(jsonContacts)})
+      }
     }catch (error){
       console.log(error)
     }

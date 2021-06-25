@@ -26,7 +26,9 @@ export default class SearchEditCards extends Component {
   async getContactsObject(){
     try{
       const jsonContacts = await AsyncStorage.getItem('@ContactsInfo')
-      this.setState({importedUser: JSON.parse(jsonContacts)})
+      if (jsonContacts !== null){
+        this.setState({importedUser: JSON.parse(jsonContacts)})
+      }
     }catch (error){
       console.log(error)
     }
@@ -45,15 +47,6 @@ export default class SearchEditCards extends Component {
       this.getContactsObject()
     
   }
-  
-//   async storeContactsObject(cardImportada){
-//     try{
-//       const jsonContacts = JSON.stringify(cardImportada)
-//       await AsyncStorage.setItem('@ContactsInfo', jsonContacts)
-//     }catch(error){
-//       console.log(error)
-//     }
-//   }
 
   onClose(){
    this.setState({showModal: !this.state.showModal})
